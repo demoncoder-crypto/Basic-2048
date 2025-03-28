@@ -12,21 +12,37 @@ body {
 }
 
 .grid-container {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(4, 100px);
     grid-gap: 10px;
     margin: 20px auto;
+    background-color: #bbada0;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* Added styles for static background cells */
+.grid-cell {
+    width: 100px;
+    height: 100px;
+    background-color: #cdc1b4;
+    border-radius: 3px;
 }
 
 .tile {
+    position: absolute;
     width: 100px;
     height: 100px;
-    background-color: #eee4da;
+    background-color: #cdc1b4;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2em;
-    transition: all 0.3s ease;
+    font-weight: bold;
+    border-radius: 3px;
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 /* Add tile colors */
@@ -42,6 +58,76 @@ body {
 .tile[data-value='1024'] { background-color: #edc53f; color: white; font-size: 1.6em; }
 .tile[data-value='2048'] { background-color: #edc22e; color: white; font-size: 1.6em; }
 
+/* Animation for new tiles appearing */
+@keyframes appear {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.tile-new {
+    animation: appear 0.2s ease-out;
+}
+
+/* Animation for merged tiles */
+@keyframes mergePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.tile-merged {
+    animation: mergePulse 0.2s ease-in-out;
+    /* We might need to adjust z-index briefly if scaling causes overlap issues */
+    /* z-index: 10; */
+}
+
 .score {
     font-size: 1.5em;
 }
+
+/* Styles for the message overlay */
+.message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(238, 228, 218, 0.73); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Ensure it's above the tiles */
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.message-overlay.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.message-content {
+    text-align: center;
+    color: #776e65; /* Dark text color */
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+/* Optional: Style for a restart button within the overlay */
+/*
+.message-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+*/
